@@ -1,0 +1,15 @@
+node_modules
+dist/
+.nyc_output
+*.log
+output/*.svg
+output/*.dot
+output/images/
+@rerun.txt
+usage.txt
+coverage/
+.DS_Store
+*-audit.json
+*log*.gz
+templates/
+.vscode/
