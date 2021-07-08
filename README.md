@@ -6,7 +6,7 @@ Diagrams can be output as .png (or any other format supported by Graphviz).
 
 Here's an example `.png` diagram generated from [templates/main.hbs](templates/main.hbs).
 
-![](screenshots/screenshot1.png?raw=true)
+![](screenshots/1.png?raw=true)
 
 ## Quickstart - How to update diagrams
 
