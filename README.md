@@ -4,7 +4,7 @@ Diagrams can be output as .png (or any other format supported by Graphviz).
 
 ## Example
 
-Here's an example `.png` diagram generated from [template/main.hbs](template/main.hbs).
+Here's an example `.png` diagram generated from [templates/main.hbs](templates/main.hbs).
 
 ![](screenshots/screenshot1.png?raw=true)
 
@@ -23,7 +23,7 @@ Run pufferfish to build all the templates in png format:
 docker run \
 	--name pufferfish \
 	--rm \
-	-v $(pwd)/template:/usr/src/app/templates \
+	-v $(pwd)/templates:/usr/src/app/templates \
 	-v $(pwd)/output:/usr/src/app/output \
 	-e PUFFERFISH_OUTPUT_FORMAT=png \
 	pufferfish:latest
@@ -62,7 +62,7 @@ To run the application locally:
 
 The application requires two parameters:
 
-`--template`: A template file, e.g., `./pufferfish-templates/dev.hbs`
+`--template`: A template file, e.g., `./templates/dev.hbs`
 
 `--out`: The output path for the `dot` file, e.g., `dev.dot`
 
@@ -81,7 +81,7 @@ mkdir -p output
 docker run \
 	--rm \
 	--name pufferfish \
-	-v $(pwd)/pufferfish-templates:/usr/src/app/templates \
+	-v $(pwd)/templates:/usr/src/app/templates \
 	-v $(pwd)/output:/usr/src/app/output \
 	pufferfish
 

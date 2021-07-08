@@ -1,0 +1,53 @@
+{{#diagram title="Cloud Architecture"}}
+
+  {{#internet name="internet" label="Internet"}}
+
+    {{devops name="devops" label="DevOps (Azure Global Network)"}}
+
+    {{#region name="region-useast" label="Azure (Region: US East)" }}
+      
+      {{sql name="shared-sqlserver" url="https://portal.azure.com/someresource"}}
+      {{dns name="dns" label="mysite.com (public)" url="https://portal.azure.com/someresource"}}
+      
+      {{#vnet name="k8s-vnet"}}{{/vnet}}
+      
+      {{#env env="dev" name="nonprod"}}
+
+        {{dns name="dns-internal-nonprod" label="nonprod.internal (private)" url="https://portal.azure.com/someresource"}}
+        {{#vnet name="edge-nonprod-useast-vnet" env="dev"}}
+          {{ip name="edge-nonprod-ip" label="Application Gateway IP (public)" url="https://portal.azure.com/someresource"}}
+          {{ip name="jumpbox-nonprod-ip" label="jumpbox IP (public)" }}
+        {{/vnet}}
+
+        {{#vnet name="db-nonprod-useast-vnet" env="dev"}}{{/vnet}}
+
+        {{vnet-peer  from="edge-nonprod-useast-vnet" to="db-nonprod-useast-vnet"}}
+        {{vnet-peer  from="k8s-vnet" to="edge-nonprod-useast-vnet"}}
+        {{vnet-peer  from="k8s-vnet" to="db-nonprod-useast-vnet"}}
+
+        {{vnet-dns  from="dns-internal-nonprod"  to="edge-nonprod-useast-vnet"}}
+      {{/env}}
+
+      {{#env env="prod" name="prod"}}
+
+        {{dns name="dns-internal-prod" label="prod.internal (private)" url="https://portal.azure.com/someresource"}}
+        {{#vnet name="edge-prod-useast-vnet" env="prod"}}
+          {{ip name="edge-prod-ip" label="Application Gateway IP (public)" url="https://portal.azure.com/someresource"}}
+          {{ip name="jumpboxprod-pip" label="jumpbox IP (public)" url="https://portal.azure.com/someresource"}}
+        {{/vnet}}
+
+        {{#vnet name="db-prod-useast-vnet" env="prod"}}{{/vnet}}
+
+        {{vnet-peer  from="edge-prod-useast-vnet"  to="db-prod-useast-vnet"}}
+        {{vnet-peer  from="k8s-vnet"            to="edge-prod-useast-vnet"}}
+        {{vnet-dns   from="dns-internal-prod"   to="edge-prod-useast-vnet"}}
+
+      {{/env}}
+
+      {{vnet-dns  from="dns"          to="edge-nonprod-useast-vnet"}}
+      {{vnet-dns  from="dns"          to="edge-prod-useast-vnet"}}
+
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}
