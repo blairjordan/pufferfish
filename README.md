@@ -37,8 +37,6 @@ Review the diagrams. If happy, commit the changes to the templates:
 
 `git add *.hbs git commit -m "<A meaningful description of the changes made>" git push`
 
-Paste the `.png` images above _(temporary until we have a home for_ `.svg` _files)_.
-
 ## Gotchas
 
 -   If your links are generating a new node instead of linking to the intended existing node, check the scope of your link definition! You may be linking between two nodes which are not in scope (or you have misspelled an ID). Try moving the link to the outer scope.
