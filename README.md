@@ -10,6 +10,8 @@ Here's an example `.png` diagram generated from [templates/main.hbs](templates/m
 
 ## Quickstart - How to update diagrams
 
+**Build pufferfish** (See instructions below).
+
 Edit diagrams under the `templates` directory.
 
 > I recommend storing templates in a seperate repository. This will allow you to source control your network architecture diagrams. You can specify a templates directory using the --template directive.
@@ -42,7 +44,7 @@ Review the diagrams. If happy, commit the changes to the templates:
 -   If your links are generating a new node instead of linking to the intended existing node, check the scope of your link definition! You may be linking between two nodes which are not in scope (or you have misspelled an ID). Try moving the link to the outer scope.
     
 
-## Rebuilding Pufferfish
+## Build Pufferfish
 
 You may need to add styles or change the layout of the diagram. To do this, you will need to build Pufferfish and publish a new image.
 
