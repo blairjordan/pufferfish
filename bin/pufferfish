@@ -1,0 +1,87 @@
+#!/bin/bash
+set -euo pipefail
+
+ROOT="${PUFFERFISH_HOME:-/usr/src/app}"
+CONFIG="${PUFFERFISH_CONFIG:-$ROOT/pufferfish.config.json}"
+
+usage() {
+  cat <<'EOF'
+pufferfish — architecture diagrams from Handlebars templates
+
+usage:
+  pufferfish syntax                       print the DSL reference (read this first if you are an LLM)
+  pufferfish helpers                      list available node/cluster/link helpers
+  pufferfish render IN [OUT]              render template file IN to PNG (default: IN with .png)
+  pufferfish render - [-|OUT]             read template from stdin; '-' for OUT writes PNG to stdout
+  pufferfish render IN -f svg [-|OUT]     pick output format (png|svg|pdf|dot)
+
+env:
+  PUFFERFISH_CONFIG   path to pufferfish.config.json (default: bundled Azure config)
+  PUFFERFISH_HOME     install root (default: /usr/src/app)
+
+LLM workflow:
+  1) docker run --rm pufferfish syntax                    # learn the DSL
+  2) echo "<template>" | docker run --rm -i pufferfish render - > diagram.png
+EOF
+}
+
+cmd="${1:-help}"; shift || true
+
+case "$cmd" in
+  syntax)
+    cat "$ROOT/SYNTAX.md"
+    ;;
+  helpers)
+    node -e "
+      const c = require('$CONFIG');
+      console.log('Nodes:');   Object.keys(c.helpers.nodes).sort().forEach(k => console.log('  ' + k));
+      console.log('Clusters:'); c.helpers.clusters.forEach(k => console.log('  ' + k));
+      console.log('Links:');    c.helpers.links.forEach(k => console.log('  ' + k));
+    "
+    ;;
+  render)
+    input="${1:-}"; shift || true
+    output=""
+    fmt="png"
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -f) fmt="$2"; shift 2 ;;
+        *)  output="$1"; shift ;;
+      esac
+    done
+
+    [ -n "$input" ] || { echo "pufferfish: missing input"; usage; exit 2; }
+
+    tmp_in=""
+    if [ "$input" = "-" ]; then
+      tmp_in="$(mktemp --suffix=.hbs)"
+      cat > "$tmp_in"
+      input="$tmp_in"
+    fi
+
+    [ -n "$output" ] || output="${input%.*}.$fmt"
+
+    tmp_dot="$(mktemp --suffix=.dot)"
+    node "$ROOT/dist/index.js" --template "$input" --out "$tmp_dot" --config "$CONFIG" >&2
+
+    if [ "$fmt" = "dot" ]; then
+      if [ "$output" = "-" ]; then cat "$tmp_dot"; else cp "$tmp_dot" "$output"; echo "wrote $output" >&2; fi
+    elif [ "$output" = "-" ]; then
+      dot "-T$fmt" "$tmp_dot"
+    else
+      dot "-T$fmt" "$tmp_dot" -o "$output"
+      echo "wrote $output" >&2
+    fi
+
+    [ -z "$tmp_in" ] || rm -f "$tmp_in"
+    rm -f "$tmp_dot"
+    ;;
+  help|--help|-h|"")
+    usage
+    ;;
+  *)
+    echo "pufferfish: unknown command '$cmd'" >&2
+    usage
+    exit 2
+    ;;
+esac

@@ -1,109 +1,125 @@
-Pufferfish allows you to define your cloud network architecture using [handlebars templates](https://handlebarsjs.com/), and converts these to Graphviz diagrams.
+# Pufferfish
 
-Diagrams can be output as .png (or any other format supported by Graphviz).
+Architecture diagrams from a tiny Handlebars DSL. Designed so an LLM can read [SYNTAX.md](SYNTAX.md), write a template, and render it with one Docker command.
 
-## Example
+Built-in icon sets for **AWS** (1,000+ icons), **Azure** (650+ icons), and **GCP** (200+ icons).
 
-Here's an example `.png` diagram generated from [templates/main.hbs](templates/main.hbs).
+## Example output
 
-![](screenshots/1.png?raw=true)
+| | |
+|---|---|
+| ![Azure comprehensive](screenshots/azure-comprehensive.png?raw=true) | ![AWS Bedrock stack](screenshots/aws-bedrock.png?raw=true) |
+| **Azure** — hub-and-spoke vnets, 20+ services across compute / data / integration / AI | **AWS** — GenAI stack with Bedrock, SageMaker, EKS, Fargate, Aurora, EventBridge |
+| ![GCP](screenshots/gcp.png?raw=true) | ![Mixed cloud](screenshots/mixed-cloud.png?raw=true) |
+| **GCP** — GKE, Cloud Run, Vertex AI, BigQuery, Pub/Sub, Spanner | **Multi-cloud** — Azure + AWS in one diagram |
 
-## Quickstart - How to update diagrams
+## Quickstart
 
-**Build pufferfish** (See instructions below).
+```bash
+# 1. Build the image once.
+docker build -t pufferfish .
 
-Edit diagrams under the `templates` directory.
+# 2. Have your LLM read the syntax.
+docker run --rm pufferfish syntax
 
-> I recommend storing templates in a seperate repository. This will allow you to source control your network architecture diagrams. You can specify a templates directory using the --template directive.
-
-Make a directory for your output:
-
-`mkdir -p output`
-
-Run pufferfish to build all the templates in png format:
-```
-docker run \
-	--name pufferfish \
-	--rm \
-	-v $(pwd)/templates:/usr/src/app/templates \
-	-v $(pwd)/output:/usr/src/app/output \
-	-e PUFFERFISH_OUTPUT_FORMAT=png \
-	pufferfish:latest
-```
-
-See [https://graphviz.org/doc/info/output.html](https://graphviz.org/doc/info/output.html "https://graphviz.org/doc/info/output.html") for a list of available `PUFFERFISH_OUTPUT_FORMAT` output formats.
-
-Your diagrams will appear in `/output`
-
-Review the diagrams. If happy, commit the changes to the templates:
-
-`git add *.hbs git commit -m "<A meaningful description of the changes made>" git push`
-
-## Gotchas
-
--   If your links are generating a new node instead of linking to the intended existing node, check the scope of your link definition! You may be linking between two nodes which are not in scope (or you have misspelled an ID). Try moving the link to the outer scope.
-    
-
-## Build Pufferfish
-
-You may need to add styles or change the layout of the diagram. To do this, you will need to build Pufferfish and publish a new image.
-
-Clone pufferfish:
-
-`git clone https://blairjordan@github.com/pufferfish.git && cd pufferfish`
-
-To build a new version:
-
-`yarn && yarn build`
-
-To run the application locally:
-
-`yarn start`
-
-The application requires two parameters:
-
-`--template`: A template file, e.g., `./templates/dev.hbs`
-
-`--out`: The output path for the `dot` file, e.g., `dev.dot`
-
-### Building a new Pufferfish image
-
-To build a new image::
-
-`yarn && yarn build && docker build . -t pufferfish:latest`
-
-#### Test the image:
-
-Run:
-```
-mkdir -p output
-
-docker run \
-	--rm \
-	--name pufferfish \
-	-v $(pwd)/templates:/usr/src/app/templates \
-	-v $(pwd)/output:/usr/src/app/output \
-	pufferfish
-
-docker rm pufferfish
+# 3. Pipe a template in, get a PNG out.
+echo '{{#diagram title="API"}}
+  {{#internet name="net"}}
+    {{#region name="use1"}}
+      {{#env env="prod" name="prod"}}
+        {{#vnet name="api-vpc" env="prod"}}
+          {{aws-ec2  name="api" label="API"}}
+          {{aws-rds  name="db"  label="Postgres"}}
+        {{/vnet}}
+        {{data-transfer from="api" to="db"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+{{/diagram}}' | docker run --rm -i -e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json pufferfish render - > diagram.png
 ```
 
-### Enhancements
+That's it. Three commands. The LLM only needs `syntax` + the template it generated.
 
-I had to timebox the development of Pufferfish, so there are a lot of potential enhancements.
+## LLM agent prompt (copy/paste)
 
-A few that I can think of:
+> You can generate architecture diagrams via the `pufferfish` Docker image. To learn the DSL, run `docker run --rm pufferfish syntax`. To render, pipe a template into `docker run --rm -i pufferfish render -` and write the resulting PNG to disk. For AWS-heavy diagrams pass `-e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json`; for cross-cloud use `/usr/src/app/examples/mixed.pufferfish.config.json`.
 
--   Don’t bake images and styles into Docker image. These should ideally be exposed to the image as a volume.
+## CLI
 
--   Make markup translation generic: Specify markup translation (handlbars → dot) as pufferfish config.
+```
+pufferfish syntax                       print the DSL reference
+pufferfish helpers                      list available node/cluster/link helpers
+pufferfish render IN [OUT]              render template IN to PNG
+pufferfish render - [-|OUT]             stdin → stdout (or file)
+pufferfish render IN -f svg out.svg     pick output format (png|svg|pdf|dot)
+```
 
--   Remove missing `lhead` / `thead` for vnet links. These will only produce warnings at the moment, but it would be nice to remove them. Requires some enhancement to the `injectLinkNodes` helper.
+Env: `PUFFERFISH_CONFIG` (alternate config path), `PUFFERFISH_HOME` (install root).
 
-### **Why “Pufferfish”?**
+## Local dev (no Docker)
 
-The Japanese Pufferfish is “Nature’s Greatest Artist”: [https://www.youtube.com/watch?v=VQr8xDk_UaY](https://www.youtube.com/watch?v=VQr8xDk_UaY "https://www.youtube.com/watch?v=VQr8xDk_UaY")
+Skip this if you're using the Docker image — graphviz is already inside it.
 
-## References
+```bash
+yarn install
+./bin/fetch-icons.sh        # one-time: extract icon zips from vendor/ into aws-icons/, azure-icons/, gcp-icons/
+yarn build
+node dist/index.js --template templates/main.hbs --out main.dot
+dot -Tpng main.dot -o main.png
+```
 
-See MS Azure Architecture Icon guidelines here: [https://docs.microsoft.com/en-us/azure/architecture/icons/](https://docs.microsoft.com/en-us/azure/architecture/icons/ "https://docs.microsoft.com/en-us/azure/architecture/icons/")
+Host deps for this path: `unzip` and `graphviz`. Everything else (node modules, icons) is local to the repo.
+
+Test suite + fixture render:
+
+```bash
+npm test           # unit + integration
+npm run fixtures   # render every fixture under fixtures/ to output/fixtures/
+```
+
+## Templates outside this repo
+
+Templates are data, not source. Mount a volume of `.hbs` files at runtime — don't fork this repo to store diagrams.
+
+```bash
+docker run --rm -v "$PWD/my-templates:/work" -w /work pufferfish render app.hbs app.png
+```
+
+## Configuration
+
+`pufferfish.config.json` declares which helpers exist and where their icons live.
+
+- `translator.engine` — `handlebars` (only engine today)
+- `assets.imageDir` — base dir for icon files (resolved relative to the config)
+- `assets.stylesFile` — JSON file of cluster/link colors
+- `helpers.nodes` — helper name → icon path
+- `helpers.clusters` — block helpers that wrap children
+- `helpers.links` — edge helpers
+
+Add new icons by dropping PNGs anywhere reachable from `imageDir` and adding helper mappings. Override via `--config PATH` or `PUFFERFISH_CONFIG`.
+
+## Icon catalog
+
+Icons ship as zips under `vendor/` (~17MB total) and extract into top-level dirs that the Docker build and `npm` scripts auto-populate. The extracted dirs are gitignored — you never commit thousands of PNGs.
+
+- `vendor/aws-icons.zip` → `aws-icons/` (1,097 PNGs, official AWS Architecture Icons)
+- `vendor/azure-icons.zip` → `azure-icons/` (667 PNGs, converted from Azure SVGs)
+- `vendor/gcp-icons.zip` → `gcp-icons/` (216 PNGs, converted from Google Cloud legacy icons)
+
+Run `./bin/fetch-icons.sh` (or `npm run icons`) to (re-)extract. Each cloud has a config in `examples/` that maps short helper names to icon paths — add a new helper by editing the config, no code changes required.
+
+## Fixtures
+
+`fixtures/` contains stress-test templates rendered by `npm run fixtures`:
+
+- `azure-comprehensive.hbs` — 20+ Azure services across hub/spoke vnets
+- `aws-bedrock.hbs` — full GenAI stack (Bedrock, SageMaker, EKS, Fargate, Aurora, Redshift, EventBridge, …)
+- `gcp-basic.hbs` — GKE, Cloud Run, Vertex AI, BigQuery, Pub/Sub, Spanner, …
+- `mixed-cloud.hbs` — Azure + AWS in one diagram
+- `*-nested-subnets.hbs` — deep subnet nesting
+- `azure-edge-cases.hbs` — empty vnets, node-to-node, cross-env links
+- `link-matrix.hbs` — every link type in one diagram
+
+## Why "Pufferfish"
+
+The Japanese pufferfish is nature's greatest artist: <https://www.youtube.com/watch?v=VQr8xDk_UaY>

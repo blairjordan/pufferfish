@@ -1,0 +1,14 @@
+.git
+.github
+node_modules
+dist
+output
+screenshots
+images
+templates
+fixtures
+tests
+*.log
+aws-icons
+azure-icons
+gcp-icons
