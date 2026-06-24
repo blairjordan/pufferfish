@@ -53,14 +53,16 @@ case "$cmd" in
     [ -n "$input" ] || { echo "pufferfish: missing input"; usage; exit 2; }
 
     tmp_dir="$(mktemp -d)"
-    tmp_in=""
+    stdin_input=0
     if [ "$input" = "-" ]; then
-      tmp_in="$tmp_dir/in.hbs"
-      cat > "$tmp_in"
-      input="$tmp_in"
+      stdin_input=1
+      cat > "$tmp_dir/in.hbs"
+      input="$tmp_dir/in.hbs"
     fi
 
-    [ -n "$output" ] || output="${input%.*}.$fmt"
+    if [ -z "$output" ]; then
+      if [ "$stdin_input" = "1" ]; then output="-"; else output="${input%.*}.$fmt"; fi
+    fi
 
     tmp_dot="$tmp_dir/out.dot"
     node "$ROOT/dist/index.js" --template "$input" --out "$tmp_dot" --config "$CONFIG" >&2
