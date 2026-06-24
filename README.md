@@ -1,5 +1,7 @@
 # Pufferfish
 
+> **Diagrams-as-code for cloud architecture.** Multi-cloud, version-controllable, LLM-ready. Stop fighting your whiteboard tool — `git diff` your topology like everything else.
+
 Architecture diagrams from a tiny Handlebars DSL. Designed so an LLM can read [SYNTAX.md](SYNTAX.md), write a template, and render it with one Docker command.
 
 Built-in icon sets for **AWS** (1,000+ icons), **Azure** (650+ icons), and **GCP** (200+ icons).
