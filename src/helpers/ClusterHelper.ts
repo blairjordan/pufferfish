@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { HelperDelegate } from 'handlebars';
 import { Helper } from './Helper';
-import { getProperty } from '../lib/helpers';
+import { getDefault, getProperty } from '../lib/helpers';
 
 const dummyNode = (): string =>
   `"dummy-${crypto.randomBytes(8).toString('hex')}" [shape=point width=0 height=0 style=invis]`;
@@ -16,6 +16,8 @@ export class ClusterHelper extends Helper {
     return (opts) => {
       const { env, name, label } = opts.hash;
       const body = opts.fn(this).trim() || dummyNode();
+      const fontsize = getDefault('cluster-fontsize', '12');
+      const fontcolor = getDefault('label-fontcolor', '#222222');
 
       const styleProps = ['bgcolor', 'style', 'margin', 'pencolor', 'penwidth']
         .map(prop => {
@@ -30,7 +32,8 @@ export class ClusterHelper extends Helper {
         label="${label ?? name}"
         labeljust="c"
         labelloc="t"
-        fontsize=12
+        fontsize=${fontsize}
+        fontcolor="${fontcolor}"
         ${styleProps}
         ${body}
       }`;

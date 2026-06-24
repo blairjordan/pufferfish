@@ -21,6 +21,12 @@ const getProperty = (opts: { env?: string; type: string; prop: string }): string
   return value === undefined ? '' : String(value);
 };
 
+const getDefault = (prop: string, fallback: string): string => {
+  const { styles } = getRuntimeOptions();
+  const hit = (styles.defaults ?? []).find(s => s.prop === prop);
+  return hit?.value === undefined ? fallback : String(hit.value);
+};
+
 type GraphNode = { id: string; parent?: string };
 
 const findDeepestDescendant = (nodes: GraphNode[], rootId: string): GraphNode | undefined => {
@@ -48,13 +54,17 @@ const buildEdgeAttrs = (
   toId: string,
   data: Record<string, string>
 ): string => {
+  const fontcolor = getDefault('label-fontcolor', '#222222');
   const attrs = [
     fromCluster ? `ltail="${fromId}"` : '',
     toCluster ? `lhead="${toId}"` : '',
     data.color ? `color="${data.color}"` : '',
     data.type ? `type="${data.type}"` : '',
     data.style ? `style=${data.style}` : '',
-    `penwidth="${data.penwidth ?? 1}"`
+    `penwidth="${data.penwidth ?? 1}"`,
+    data.label ? `label="${data.label}"` : '',
+    data.label ? `fontcolor="${fontcolor}"` : '',
+    data.label ? 'fontsize=10' : ''
   ].filter(Boolean);
   return attrs.join('\n        ');
 };
@@ -96,5 +106,6 @@ export {
   loadTemplateFile,
   compile,
   injectLinkNodes,
-  getProperty
+  getProperty,
+  getDefault
 };

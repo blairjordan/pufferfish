@@ -1,4 +1,21 @@
 {
+  "defaults": [
+    { "type": "default", "prop": "diagram-bgcolor",      "value": "white" },
+    { "type": "default", "prop": "font-family",          "value": "Helvetica" },
+    { "type": "default", "prop": "node-fontsize",        "value": 11 },
+    { "type": "default", "prop": "cluster-fontsize",     "value": 12 },
+    { "type": "default", "prop": "icon-size",            "value": 56 },
+    { "type": "default", "prop": "label-fontcolor",      "value": "#222222" },
+    { "type": "default", "prop": "edge-color",           "value": "#888888" },
+    { "type": "default", "prop": "edge-penwidth",        "value": 1 },
+    { "type": "default", "prop": "edge-arrowsize",       "value": 0.7 },
+    { "type": "default", "prop": "edge-minlen",          "value": 2 },
+    { "type": "default", "prop": "descriptor-color",     "value": "#555555" },
+    { "type": "default", "prop": "fallback-fillcolor",   "value": "#f5f5f5" },
+    { "type": "default", "prop": "fallback-bordercolor", "value": "#cccccc" },
+    { "type": "default", "prop": "nodesep",              "value": 0.55 },
+    { "type": "default", "prop": "ranksep",              "value": 0.8 }
+  ],
   "general": [
     { "type": "region", "prop": "bgcolor", "value": "#ffffe6" },
     { "type": "region", "prop": "style", "value": "rounded" },

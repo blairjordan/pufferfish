@@ -48,7 +48,7 @@ Handlebars DSL → architecture diagrams. One template → one PNG.
 
 \* `vnet` exists as both a block helper (cluster) and a node helper (icon). In templates the block form (`{{#vnet ...}}...{{/vnet}}`) wins because Handlebars dispatches block vs. inline at parse time.
 
-Node attrs: `name` (unique ID, required), `label` (display text), `url` (clickable in SVG/PDF).
+Node attrs: `name` (unique ID, required), `label` (display text), `url` (turns the node into a clickable link in SVG/PDF/imap output — PNG can't carry links).
 
 ## Link helpers (edges)
 
@@ -58,7 +58,7 @@ Node attrs: `name` (unique ID, required), `label` (display text), `url` (clickab
 | `vnet-dns`      | blue   | DNS resolution                |
 | `data-transfer` | gray   | generic data flow             |
 
-`{{vnet-peer from="ID" to="ID"}}` — `from`/`to` may be **node names** or **cluster names**. Endpoints must be in the same template; misspelled names produce warnings.
+`{{vnet-peer from="ID" to="ID" label="optional"}}` — `from`/`to` may be **node names** or **cluster names**. Endpoints must be in the same template; misspelled names produce warnings. Pass `label="..."` to draw text on the connector.
 
 ## Rules
 
@@ -77,6 +77,28 @@ Node attrs: `name` (unique ID, required), `label` (display text), `url` (clickab
 - `examples/mixed.pufferfish.config.json` — Multi-cloud (Azure + AWS) in one diagram
 
 Pass `--config PATH` to the CLI, or set `PUFFERFISH_CONFIG=PATH`.
+
+## Clickable diagrams
+
+Pass `url=...` on any node and render as SVG (or PDF) — the node becomes a clickable link:
+
+```handlebars
+{{aws-ec2 name="api" label="API" url="https://console.aws.amazon.com/ec2/v2/home?#Instances:instanceId=i-abc"}}
+```
+
+```bash
+pufferfish render diagram.hbs -f svg diagram.svg
+```
+
+## Theming
+
+Open `styles.json` to recolour anything. Three sections:
+
+- `defaults[]` — diagram background, font family, font sizes, edge color/width, icon size, fallback box colors, nodesep/ranksep. Each entry is `{type:"default", prop, value}`.
+- `general[]` — per-type cluster and link styling (`bgcolor`, `style`, `margin`, `color`, `penwidth` for `region`/`vnet`/`subnet`/`env`/`vnet-peer`/`vnet-dns`/`data-transfer`).
+- `<env-name>[]` — per-environment overrides. The defaults ship with `dev` (green) and `prod` (orange/red); add `staging`/`uat`/anything you like by dropping a new section.
+
+Point at a different file with `--styles-file PATH` (or update `assets.stylesFile` in the config).
 
 ## One-line generation
 

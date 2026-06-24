@@ -91,12 +91,40 @@ docker run --rm -v "$PWD/my-templates:/work" -w /work pufferfish render app.hbs 
 
 - `translator.engine` — `handlebars` (only engine today)
 - `assets.imageDir` — base dir for icon files (resolved relative to the config)
-- `assets.stylesFile` — JSON file of cluster/link colors
+- `assets.stylesFile` — JSON file of theme + cluster/link colors
 - `helpers.nodes` — helper name → icon path
 - `helpers.clusters` — block helpers that wrap children
 - `helpers.links` — edge helpers
 
 Add new icons by dropping PNGs anywhere reachable from `imageDir` and adding helper mappings. Override via `--config PATH` or `PUFFERFISH_CONFIG`.
+
+## Theming
+
+Every color and font in the diagram is data-driven via `styles.json` — nothing visual is hardcoded.
+
+- `defaults[]` — diagram bg, font family, node/cluster font sizes, edge color/width/arrows, icon size, fallback box colors, layout spacing (`nodesep`, `ranksep`).
+- `general[]` — cluster (`bgcolor`, `style`, `margin`) and link (`color`, `penwidth`) styling by type.
+- `<env>[]` — per-environment overrides. `dev` is green, `prod` is orange/red; add `staging` or anything else by dropping a new section.
+
+Ship a custom theme with `--styles-file my-theme.json` (or set `assets.stylesFile` in the config). The image accepts a volume mount:
+
+```bash
+docker run --rm -i -v "$PWD/my-theme.json:/usr/src/app/styles.json" pufferfish render - < t.hbs > out.png
+```
+
+## Clickable diagrams
+
+Add `url=` to any helper and render as SVG. The node becomes a clickable link:
+
+```handlebars
+{{aws-ec2 name="api" label="API" url="https://example.com/api"}}
+```
+
+```bash
+docker run --rm -i pufferfish render - -f svg > diagram.svg
+```
+
+PNG can't carry hyperlinks — use `svg`, `pdf`, or `imap` formats for clickable output.
 
 ## Icon catalog
 

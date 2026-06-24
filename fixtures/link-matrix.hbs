@@ -13,10 +13,10 @@
           {{aws-ec2 name="right-ec2" label="Right EC2"}}
         {{/vnet}}
 
-        {{vnet-peer from="left-vnet" to="right-vnet"}}
-        {{vnet-dns from="global-dns" to="left-vnet"}}
-        {{vnet-dns from="global-dns" to="right-vnet"}}
-        {{data-transfer from="left-vm" to="right-ec2"}}
+        {{vnet-peer     from="left-vnet"  to="right-vnet" label="peering"}}
+        {{vnet-dns      from="global-dns" to="left-vnet"  label="resolves"}}
+        {{vnet-dns      from="global-dns" to="right-vnet"}}
+        {{data-transfer from="left-vm"    to="right-ec2"  label="REST"}}
       {{/env}}
     {{/region}}
   {{/internet}}
