@@ -87,7 +87,7 @@ Pass `url=...` on any node and render as SVG (or PDF) — the node becomes a cli
 ```
 
 ```bash
-pufferfish render diagram.hbs -f svg diagram.svg
+docker run --rm -i ghcr.io/blairjordan/pufferfish render - -f svg < diagram.hbs > diagram.svg
 ```
 
 ## Theming
@@ -103,5 +103,5 @@ Point at a different file with `--styles-file PATH` (or update `assets.stylesFil
 ## One-line generation
 
 ```bash
-echo '<your template>' | docker run --rm -i pufferfish render - > diagram.png
+echo '<your template>' | docker run --rm -i ghcr.io/blairjordan/pufferfish render - > diagram.png
 ```

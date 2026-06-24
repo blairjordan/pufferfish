@@ -18,13 +18,10 @@ Built-in icon sets for **AWS** (1,000+ icons), **Azure** (650+ icons), and **GCP
 ## Quickstart
 
 ```bash
-# 1. Build the image once.
-docker build -t pufferfish .
+# 1. Have your LLM read the syntax.
+docker run --rm ghcr.io/blairjordan/pufferfish syntax
 
-# 2. Have your LLM read the syntax.
-docker run --rm pufferfish syntax
-
-# 3. Pipe a template in, get a PNG out.
+# 2. Pipe a template in, get a PNG out.
 echo '{{#diagram title="API"}}
   {{#internet name="net"}}
     {{#region name="use1"}}
@@ -37,14 +34,16 @@ echo '{{#diagram title="API"}}
       {{/env}}
     {{/region}}
   {{/internet}}
-{{/diagram}}' | docker run --rm -i -e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json pufferfish render - > diagram.png
+{{/diagram}}' | docker run --rm -i \
+  -e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json \
+  ghcr.io/blairjordan/pufferfish render - > diagram.png
 ```
 
-That's it. Three commands. The LLM only needs `syntax` + the template it generated.
+Two commands. The LLM only needs `syntax` + the template it generated. Image is `linux/amd64` + `linux/arm64`, published to GitHub Container Registry on every push to main.
 
 ## LLM agent prompt (copy/paste)
 
-> You can generate architecture diagrams via the `pufferfish` Docker image. To learn the DSL, run `docker run --rm pufferfish syntax`. To render, pipe a template into `docker run --rm -i pufferfish render -` and write the resulting PNG to disk. For AWS-heavy diagrams pass `-e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json`; for cross-cloud use `/usr/src/app/examples/mixed.pufferfish.config.json`.
+> You can generate architecture diagrams via the `ghcr.io/blairjordan/pufferfish` Docker image. To learn the DSL, run `docker run --rm ghcr.io/blairjordan/pufferfish syntax`. To render, pipe a template into `docker run --rm -i ghcr.io/blairjordan/pufferfish render -` and write the resulting PNG to disk. For AWS use `-e PUFFERFISH_CONFIG=/usr/src/app/examples/aws.pufferfish.config.json`; for GCP `examples/gcp.pufferfish.config.json`; for cross-cloud `examples/mixed.pufferfish.config.json`.
 
 ## CLI
 
@@ -84,7 +83,7 @@ npm run fixtures   # render every fixture under fixtures/ to output/fixtures/
 Templates are data, not source. Mount a volume of `.hbs` files at runtime — don't fork this repo to store diagrams.
 
 ```bash
-docker run --rm -v "$PWD/my-templates:/work" -w /work pufferfish render app.hbs app.png
+docker run --rm -v "$PWD/my-templates:/work" -w /work ghcr.io/blairjordan/pufferfish render app.hbs app.png
 ```
 
 ## Configuration
@@ -111,7 +110,8 @@ Every color and font in the diagram is data-driven via `styles.json` — nothing
 Ship a custom theme with `--styles-file my-theme.json` (or set `assets.stylesFile` in the config). The image accepts a volume mount:
 
 ```bash
-docker run --rm -i -v "$PWD/my-theme.json:/usr/src/app/styles.json" pufferfish render - < t.hbs > out.png
+docker run --rm -i -v "$PWD/my-theme.json:/usr/src/app/styles.json" \
+  ghcr.io/blairjordan/pufferfish render - < t.hbs > out.png
 ```
 
 ## Clickable diagrams
@@ -123,7 +123,7 @@ Add `url=` to any helper and render as SVG. The node becomes a clickable link:
 ```
 
 ```bash
-docker run --rm -i pufferfish render - -f svg > diagram.svg
+docker run --rm -i ghcr.io/blairjordan/pufferfish render - -f svg > diagram.svg
 ```
 
 PNG can't carry hyperlinks — use `svg`, `pdf`, or `imap` formats for clickable output.
