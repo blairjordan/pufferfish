@@ -5,6 +5,7 @@ dist/
 output/*.svg
 output/*.dot
 output/images/
+output/fixtures/
 @rerun.txt
 usage.txt
 coverage/
@@ -12,3 +13,8 @@ coverage/
 *-audit.json
 *log*.gz
 .vscode/
+
+# extracted icon trees — produced by bin/fetch-icons.sh from vendor/ zips
+aws-icons/
+azure-icons/
+gcp-icons/
