@@ -1,0 +1,59 @@
+{
+  "translator": {
+    "engine": "handlebars"
+  },
+  "assets": {
+    "imageDir": "./azure-icons",
+    "stylesFile": "./styles.json"
+  },
+  "helpers": {
+    "nodes": {
+      "descriptor": "",
+      "vm": "compute/10021-icon-service-Virtual-Machine.png",
+      "vmss": "compute/10034-icon-service-VM-Scale-Sets.png",
+      "aks": "compute/10023-icon-service-Kubernetes-Services.png",
+      "functions": "compute/10029-icon-service-Function-Apps.png",
+      "app-service": "app-services/10035-icon-service-App-Services.png",
+      "container-instance": "compute/10104-icon-service-Container-Instances.png",
+      "acr": "containers/10105-icon-service-Container-Registries.png",
+      "vnet": "networking/10061-icon-service-Virtual-Networks.png",
+      "subnet-icon": "networking/02742-icon-service-Subnet.png",
+      "bastion": "networking/02422-icon-service-Bastions.png",
+      "ag": "networking/10076-icon-service-Application-Gateways.png",
+      "lb": "networking/10062-icon-service-Load-Balancers.png",
+      "front-door": "networking/10073-icon-service-Front-Door-and-CDN-Profiles.png",
+      "firewall": "networking/10084-icon-service-Firewalls.png",
+      "nsg": "networking/10067-icon-service-Network-Security-Groups.png",
+      "traffic-mgr": "networking/10065-icon-service-Traffic-Manager-Profiles.png",
+      "vnet-gateway": "networking/10063-icon-service-Virtual-Network-Gateways.png",
+      "ddos": "networking/10072-icon-service-DDoS-Protection-Plans.png",
+      "waf": "networking/10362-icon-service-Web-Application-Firewall-Policies(WAF).png",
+      "dns": "networking/10064-icon-service-DNS-Zones.png",
+      "ip": "networking/02742-icon-service-Subnet.png",
+      "cosmosdb": "databases/10121-icon-service-Azure-Cosmos-DB.png",
+      "sql": "databases/10130-icon-service-SQL-Database.png",
+      "redis": "databases/10137-icon-service-Cache-Redis.png",
+      "synapse": "databases/00606-icon-service-Azure-Synapse-Analytics.png",
+      "storage": "storage/10086-icon-service-Storage-Accounts.png",
+      "data-lake": "storage/10090-icon-service-Data-Lake-Storage-Gen1.png",
+      "keyvault": "security/10245-icon-service-Key-Vaults.png",
+      "service-bus": "integration/10836-icon-service-Azure-Service-Bus.png",
+      "logic-apps": "integration/02631-icon-service-Logic-Apps.png",
+      "api-mgmt": "integration/10042-icon-service-API-Management-Services.png",
+      "event-hub": "analytics/00039-icon-service-Event-Hubs.png",
+      "data-factory": "analytics/10126-icon-service-Data-Factories.png",
+      "databricks": "analytics/10787-icon-service-Azure-Databricks.png",
+      "log-analytics": "analytics/00009-icon-service-Log-Analytics-Workspaces.png",
+      "ml": "ai-and-machine-learning/10166-icon-service-Machine-Learning.png",
+      "cognitive": "ai-and-machine-learning/10162-icon-service-Cognitive-Services.png",
+      "openai": "ai-and-machine-learning/03438-icon-service-Azure-OpenAI.png",
+      "monitor": "monitor/00001-icon-service-Monitor.png",
+      "app-insights": "monitor/00012-icon-service-Application-Insights.png",
+      "automation": "management-and-governance/00022-icon-service-Automation-Accounts.png",
+      "devops": "monitor/00012-icon-service-Application-Insights.png",
+      "azure": "compute/10021-icon-service-Virtual-Machine.png"
+    },
+    "clusters": ["internet", "region", "env", "subnet", "vnet"],
+    "links": ["vnet-peer", "vnet-dns", "data-transfer"]
+  }
+}

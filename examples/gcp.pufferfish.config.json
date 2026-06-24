@@ -1,0 +1,59 @@
+{
+  "translator": {
+    "engine": "handlebars"
+  },
+  "assets": {
+    "imageDir": "../gcp-icons",
+    "stylesFile": "../styles.json"
+  },
+  "helpers": {
+    "nodes": {
+      "descriptor": "",
+      "gce": "compute_engine.png",
+      "gke": "google_kubernetes_engine.png",
+      "cloud-run": "cloud_run.png",
+      "cloud-functions": "cloud_functions.png",
+      "app-engine": "app_engine.png",
+      "anthos": "anthos.png",
+      "gcs": "cloud_storage.png",
+      "filestore": "filestore.png",
+      "cloud-sql": "cloud_sql.png",
+      "spanner": "cloud_spanner.png",
+      "firestore": "firestore.png",
+      "bigtable": "bigtable.png",
+      "memorystore": "memorystore.png",
+      "bigquery": "bigquery.png",
+      "dataflow": "dataflow.png",
+      "dataproc": "dataproc.png",
+      "composer": "cloud_composer.png",
+      "pubsub": "pubsub.png",
+      "tasks": "cloud_tasks.png",
+      "scheduler": "cloud_scheduler.png",
+      "vertex-ai": "ai_platform_unified.png",
+      "automl": "automl.png",
+      "vpc": "virtual_private_cloud.png",
+      "lb": "cloud_load_balancing.png",
+      "cdn": "cloud_cdn.png",
+      "dns": "cloud_dns.png",
+      "cloud-nat": "cloud_nat.png",
+      "vpn": "cloud_vpn.png",
+      "interconnect": "cloud_interconnect.png",
+      "firewall": "cloud_firewall_rules.png",
+      "cloud-armor": "cloud_armor.png",
+      "api-gateway": "cloud_api_gateway.png",
+      "apigee": "apigee_api_platform.png",
+      "iam": "identity_and_access_management.png",
+      "kms": "key_management_service.png",
+      "secret-manager": "secret_manager.png",
+      "logging": "cloud_logging.png",
+      "monitoring": "cloud_monitoring.png",
+      "trace": "trace.png",
+      "cloud-build": "cloud_build.png",
+      "cloud-deploy": "cloud_deploy.png",
+      "artifact-registry": "artifact_registry.png",
+      "iot-core": "iot_core.png"
+    },
+    "clusters": ["internet", "region", "env", "subnet", "vnet"],
+    "links": ["vnet-peer", "vnet-dns", "data-transfer"]
+  }
+}

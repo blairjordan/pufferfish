@@ -1,0 +1,35 @@
+{{#diagram title="Azure Edge Cases"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{devops name="devops" label="CI/CD"}}
+
+    {{#region name="region-au" label="Azure (Australia East)"}}
+      {{dns name="public-dns" label="app.example.com"}}
+      {{descriptor name="legend" label="Empty vnets and node-to-node links"}}
+
+      {{#env env="dev" name="sandbox"}}
+        {{#vnet name="sandbox-edge" env="dev"}}
+          {{ag name="gateway" label="Gateway"}}
+          {{vm name="jumpbox" label="Jumpbox"}}
+        {{/vnet}}
+
+        {{#vnet name="sandbox-data" env="dev"}}{{/vnet}}
+
+        {{vnet-peer from="sandbox-edge" to="sandbox-data"}}
+        {{vnet-dns from="public-dns" to="sandbox-edge"}}
+        {{data-transfer from="gateway" to="jumpbox"}}
+      {{/env}}
+
+      {{#env env="prod" name="production"}}
+        {{#vnet name="prod-app" env="prod"}}
+          {{ip name="prod-ip" label="Public IP"}}
+          {{vm name="prod-api" label="API VM"}}
+        {{/vnet}}
+      {{/env}}
+
+      {{data-transfer from="jumpbox" to="prod-api"}}
+      {{vnet-peer from="sandbox-edge" to="prod-app"}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

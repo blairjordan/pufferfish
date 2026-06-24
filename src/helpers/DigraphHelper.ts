@@ -1,6 +1,5 @@
-
-import { Helper } from './Helper';
 import { HelperDelegate, SafeString } from 'handlebars';
+import { Helper } from './Helper';
 
 export class DigraphHelper extends Helper {
   getHandlerFn(): HelperDelegate {
@@ -9,26 +8,32 @@ export class DigraphHelper extends Helper {
       return new SafeString(`
       digraph {
         compound=true;
-      
-        # Default node style
+        splines=true;
+        pad="0.5";
+        nodesep="0.55";
+        ranksep="0.8";
+        outputorder="edgesfirst";
+        fontname="Helvetica";
+        bgcolor="white";
+
         node [
-          imagepos="tc"
-          shape=none
-          labelloc="b"
-          height="0.90"
-          fontsize=14
+          fontname="Helvetica"
+          shape=plaintext
+          margin=0
+          fontsize=11
         ];
-      
-        # Default arrow style
+
         edge [
-          minlen=4
+          fontname="Helvetica"
+          minlen=2
           color="#888888"
           penwidth=1
           dir=both
+          arrowsize=0.7
         ]
-        
+
         ${content}
       }`);
-    }
+    };
   }
 }

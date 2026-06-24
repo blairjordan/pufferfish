@@ -1,0 +1,27 @@
+{{#diagram title="AWS Basic"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{aws-cloud name="aws" label="AWS Cloud"}}
+
+    {{#region name="region-apse2" label="AWS (ap-southeast-2)"}}
+      {{aws-s3 name="shared-bucket" label="Artifacts"}}
+
+      {{#env env="dev" name="dev"}}
+        {{#vnet name="dev-vpc" env="dev"}}
+          {{aws-ec2 name="dev-ec2" label="App EC2"}}
+          {{aws-lambda name="dev-lambda" label="Worker Lambda"}}
+        {{/vnet}}
+
+        {{#vnet name="data-vpc" env="dev"}}
+          {{aws-rds name="dev-rds" label="RDS"}}
+          {{aws-dynamodb name="dev-ddb" label="DynamoDB"}}
+        {{/vnet}}
+
+        {{vnet-peer from="dev-vpc" to="data-vpc"}}
+        {{data-transfer from="dev-ec2" to="shared-bucket"}}
+        {{data-transfer from="dev-lambda" to="dev-ddb"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

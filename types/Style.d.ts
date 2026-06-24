@@ -1,5 +1,5 @@
 export type Style = {
   type: string;
   prop: string;
-  value: string;
+  value: string | number;
 };

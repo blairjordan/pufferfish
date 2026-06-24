@@ -1,29 +1,17 @@
 import * as Helper from '../helpers';
+import { PufferfishConfig } from './config';
 
-const Templates = {
+const buildTemplates = (config: PufferfishConfig) => ({
   ext: '.hbs',
   helpers: [
     new Helper.Digraph('diagram'),
-    new Helper.Node('vm'),
-    new Helper.Node('ag'),
-    new Helper.Node('devops'),
-    new Helper.Node('azure'),
-    new Helper.Node('dns'),
-    new Helper.Node('sql'),
-    new Helper.Node('descriptor'),
-    new Helper.Node('ip'),
-    new Helper.Cluster('internet'),
-    new Helper.Cluster('region'),
-    new Helper.Cluster('env'),
-    new Helper.Cluster('subnet'),
-    new Helper.Cluster('vnet'),
-    new Helper.Link('vnet-peer'),
-    new Helper.Link('vnet-dns'),
-    new Helper.Link('data-transfer'),
+    ...Object.keys(config.helpers.nodes).map(ref => new Helper.Node(ref)),
+    ...config.helpers.clusters.map(ref => new Helper.Cluster(ref)),
+    ...config.helpers.links.map(ref => new Helper.Link(ref))
   ],
   partials: []
-}
+});
 
 export {
-  Templates
+  buildTemplates
 }

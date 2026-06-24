@@ -1,0 +1,71 @@
+{{#diagram title="Azure Comprehensive"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{dns name="public-dns" label="contoso.com"}}
+    {{front-door name="afd" label="Front Door"}}
+
+    {{#region name="region-eus" label="Azure (East US)"}}
+      {{#env env="prod" name="prod"}}
+
+        {{#vnet name="hub-vnet" env="prod"}}
+          {{#subnet name="hub-edge" env="prod" label="Edge"}}
+            {{ag name="agw" label="App Gateway"}}
+            {{lb name="lb" label="Load Balancer"}}
+            {{bastion name="bastion" label="Bastion"}}
+          {{/subnet}}
+
+          {{#subnet name="hub-shared" env="prod" label="Shared"}}
+            {{keyvault name="kv" label="Key Vault"}}
+            {{monitor name="mon" label="Monitor"}}
+            {{app-insights name="ai" label="App Insights"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{#vnet name="app-vnet" env="prod"}}
+          {{#subnet name="app-compute" env="prod" label="Compute"}}
+            {{aks name="aks" label="AKS"}}
+            {{app-service name="apps" label="App Service"}}
+            {{functions name="fn" label="Functions"}}
+            {{acr name="acr" label="ACR"}}
+          {{/subnet}}
+
+          {{#subnet name="app-integration" env="prod" label="Integration"}}
+            {{api-mgmt name="apim" label="API Mgmt"}}
+            {{logic-apps name="logic" label="Logic Apps"}}
+            {{service-bus name="sb" label="Service Bus"}}
+            {{event-hub name="eh" label="Event Hub"}}
+          {{/subnet}}
+
+          {{#subnet name="app-data" env="prod" label="Data"}}
+            {{cosmosdb name="cosmos" label="Cosmos DB"}}
+            {{sql name="sql" label="Azure SQL"}}
+            {{synapse name="synapse" label="Synapse"}}
+            {{storage name="storage" label="Storage"}}
+            {{data-factory name="adf" label="Data Factory"}}
+          {{/subnet}}
+
+          {{#subnet name="app-ai" env="prod" label="AI"}}
+            {{ml name="aml" label="ML"}}
+            {{cognitive name="cog" label="Cognitive"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{vnet-peer from="hub-vnet" to="app-vnet"}}
+        {{vnet-dns from="public-dns" to="hub-vnet"}}
+        {{data-transfer from="agw" to="apps"}}
+        {{data-transfer from="lb" to="aks"}}
+        {{data-transfer from="apps" to="apim"}}
+        {{data-transfer from="apim" to="fn"}}
+        {{data-transfer from="fn" to="cosmos"}}
+        {{data-transfer from="aks" to="sql"}}
+        {{data-transfer from="logic" to="sb"}}
+        {{data-transfer from="sb" to="fn"}}
+        {{data-transfer from="adf" to="synapse"}}
+        {{data-transfer from="adf" to="storage"}}
+        {{data-transfer from="aml" to="cog"}}
+        {{data-transfer from="aml" to="storage"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

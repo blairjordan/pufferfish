@@ -1,0 +1,24 @@
+{{#diagram title="Link Matrix"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{dns name="global-dns" label="dns"}}
+
+    {{#region name="region-test" label="Connectivity"}}
+      {{#env env="dev" name="dev"}}
+        {{#vnet name="left-vnet" env="dev"}}
+          {{vm name="left-vm" label="Left VM"}}
+        {{/vnet}}
+
+        {{#vnet name="right-vnet" env="dev"}}
+          {{aws-ec2 name="right-ec2" label="Right EC2"}}
+        {{/vnet}}
+
+        {{vnet-peer from="left-vnet" to="right-vnet"}}
+        {{vnet-dns from="global-dns" to="left-vnet"}}
+        {{vnet-dns from="global-dns" to="right-vnet"}}
+        {{data-transfer from="left-vm" to="right-ec2"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

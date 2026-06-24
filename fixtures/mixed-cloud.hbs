@@ -1,0 +1,31 @@
+{{#diagram title="Mixed Cloud"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{devops name="devops" label="GitHub Actions"}}
+    {{dns name="global-dns" label="global.example.com"}}
+
+    {{#region name="azure-au" label="Azure (Australia East)"}}
+      {{#env env="prod" name="prod"}}
+        {{#vnet name="azure-edge" env="prod"}}
+          {{ag name="app-gateway" label="App Gateway"}}
+          {{vm name="aks-node" label="AKS Node"}}
+        {{/vnet}}
+      {{/env}}
+    {{/region}}
+
+    {{#region name="aws-apse2" label="AWS (ap-southeast-2)"}}
+      {{#env env="dev" name="dev"}}
+        {{#vnet name="aws-app" env="dev"}}
+          {{aws-vpc name="aws-vpc-node" label="VPC"}}
+          {{aws-ec2 name="aws-ec2-node" label="EC2"}}
+          {{aws-lambda name="aws-lambda-node" label="Lambda"}}
+        {{/vnet}}
+      {{/env}}
+    {{/region}}
+
+    {{vnet-dns from="global-dns" to="azure-edge"}}
+    {{data-transfer from="aks-node" to="aws-ec2-node"}}
+    {{data-transfer from="devops" to="aws-lambda-node"}}
+  {{/internet}}
+
+{{/diagram}}

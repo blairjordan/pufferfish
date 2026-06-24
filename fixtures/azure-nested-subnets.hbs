@@ -1,0 +1,48 @@
+{{#diagram title="Azure Nested Subnets"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{dns name="corp-dns" label="corp.example.com"}}
+    {{devops name="ops" label="Platform Ops"}}
+
+    {{#region name="region-central" label="Azure (Central US)"}}
+      {{#env env="prod" name="prod"}}
+        {{#vnet name="hub-vnet" env="prod"}}
+          {{#subnet name="hub-ingress" env="prod" label="Ingress Subnet"}}
+            {{ag name="hub-agw" label="Gateway"}}
+            {{ip name="hub-pip" label="Public IP"}}
+          {{/subnet}}
+
+          {{#subnet name="hub-shared" env="prod" label="Shared Services"}}
+            {{dns name="hub-private-dns" label="private.prod"}}
+            {{vm name="hub-bastion" label="Bastion"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{#vnet name="spoke-app-vnet" env="prod"}}
+          {{#subnet name="spoke-web" env="prod" label="Web Subnet"}}
+            {{vm name="web-1" label="Web 1"}}
+            {{vm name="web-2" label="Web 2"}}
+          {{/subnet}}
+
+          {{#subnet name="spoke-api" env="prod" label="API Subnet"}}
+            {{vm name="api-1" label="API 1"}}
+            {{vm name="api-2" label="API 2"}}
+          {{/subnet}}
+
+          {{#subnet name="spoke-data" env="prod" label="Data Subnet"}}
+            {{sql name="app-sql" label="Azure SQL"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{vnet-peer from="hub-vnet" to="spoke-app-vnet"}}
+        {{vnet-dns from="corp-dns" to="hub-vnet"}}
+        {{vnet-dns from="hub-private-dns" to="spoke-app-vnet"}}
+        {{data-transfer from="hub-agw" to="web-1"}}
+        {{data-transfer from="web-2" to="api-1"}}
+        {{data-transfer from="api-2" to="app-sql"}}
+        {{data-transfer from="ops" to="hub-bastion"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

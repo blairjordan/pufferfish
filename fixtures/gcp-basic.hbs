@@ -1,0 +1,75 @@
+{{#diagram title="GCP Comprehensive"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{dns name="cloud-dns" label="example.com"}}
+    {{cdn name="cdn" label="Cloud CDN"}}
+    {{cloud-armor name="armor" label="Cloud Armor"}}
+
+    {{#region name="region-use1" label="GCP (us-east1)"}}
+      {{#env env="prod" name="prod"}}
+
+        {{#vnet name="edge-vpc" env="prod"}}
+          {{#subnet name="edge-public" env="prod" label="Public"}}
+            {{lb name="glb" label="Global LB"}}
+            {{api-gateway name="apigw" label="API Gateway"}}
+            {{apigee name="apigee" label="Apigee"}}
+            {{iam name="iam" label="IAM"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{#vnet name="app-vpc" env="prod"}}
+          {{#subnet name="app-compute" env="prod" label="Compute"}}
+            {{gke name="gke" label="GKE"}}
+            {{cloud-run name="run" label="Cloud Run"}}
+            {{cloud-functions name="fn" label="Functions"}}
+            {{app-engine name="gae" label="App Engine"}}
+            {{gce name="gce" label="GCE VM"}}
+          {{/subnet}}
+
+          {{#subnet name="app-data" env="prod" label="Data"}}
+            {{cloud-sql name="sql" label="Cloud SQL"}}
+            {{spanner name="spanner" label="Spanner"}}
+            {{firestore name="firestore" label="Firestore"}}
+            {{bigtable name="bigtable" label="Bigtable"}}
+            {{memorystore name="redis" label="Memorystore"}}
+            {{gcs name="bucket" label="GCS"}}
+          {{/subnet}}
+
+          {{#subnet name="app-analytics" env="prod" label="Analytics"}}
+            {{bigquery name="bq" label="BigQuery"}}
+            {{dataflow name="dataflow" label="Dataflow"}}
+            {{composer name="composer" label="Composer"}}
+            {{pubsub name="pubsub" label="Pub/Sub"}}
+          {{/subnet}}
+
+          {{#subnet name="app-ai" env="prod" label="AI"}}
+            {{vertex-ai name="vertex" label="Vertex AI"}}
+            {{automl name="automl" label="AutoML"}}
+          {{/subnet}}
+
+          {{#subnet name="app-ops" env="prod" label="Ops"}}
+            {{cloud-build name="build" label="Cloud Build"}}
+            {{artifact-registry name="ar" label="Artifact Registry"}}
+            {{logging name="logs" label="Logging"}}
+            {{monitoring name="mon" label="Monitoring"}}
+            {{secret-manager name="secrets" label="Secrets"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{vnet-peer from="edge-vpc" to="app-vpc"}}
+        {{data-transfer from="glb" to="gke"}}
+        {{data-transfer from="apigw" to="run"}}
+        {{data-transfer from="run" to="firestore"}}
+        {{data-transfer from="gke" to="sql"}}
+        {{data-transfer from="fn" to="pubsub"}}
+        {{data-transfer from="pubsub" to="dataflow"}}
+        {{data-transfer from="dataflow" to="bq"}}
+        {{data-transfer from="bq" to="vertex"}}
+        {{data-transfer from="vertex" to="bucket"}}
+        {{data-transfer from="build" to="ar"}}
+        {{data-transfer from="ar" to="gke"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

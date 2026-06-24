@@ -9,7 +9,10 @@
     "build-ts": "tsc",
     "build-ts:watch": "tsc -w",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
-    "build": "run-s build-ts && run-s lint"
+    "build": "run-s build-ts && run-s lint",
+    "icons": "./bin/fetch-icons.sh",
+    "test": "run-s icons && run-s build-ts && node --test tests/**/*.test.js",
+    "fixtures": "run-s icons && run-s build-ts && ./scripts/render-fixtures.sh"
   },
   "author": "",
   "dependencies": {

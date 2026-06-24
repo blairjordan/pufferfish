@@ -1,0 +1,47 @@
+{
+  "translator": {
+    "engine": "handlebars"
+  },
+  "assets": {
+    "imageDir": "..",
+    "stylesFile": "../styles.json"
+  },
+  "helpers": {
+    "nodes": {
+      "descriptor": "",
+      "vm": "azure-icons/compute/10021-icon-service-Virtual-Machine.png",
+      "aks": "azure-icons/compute/10023-icon-service-Kubernetes-Services.png",
+      "functions": "azure-icons/compute/10029-icon-service-Function-Apps.png",
+      "app-service": "azure-icons/app-services/10035-icon-service-App-Services.png",
+      "vnet": "azure-icons/networking/10061-icon-service-Virtual-Networks.png",
+      "bastion": "azure-icons/networking/02422-icon-service-Bastions.png",
+      "ag": "azure-icons/networking/10076-icon-service-Application-Gateways.png",
+      "lb": "azure-icons/networking/10062-icon-service-Load-Balancers.png",
+      "front-door": "azure-icons/networking/10073-icon-service-Front-Door-and-CDN-Profiles.png",
+      "dns": "azure-icons/networking/10064-icon-service-DNS-Zones.png",
+      "ip": "azure-icons/networking/02742-icon-service-Subnet.png",
+      "cosmosdb": "azure-icons/databases/10121-icon-service-Azure-Cosmos-DB.png",
+      "sql": "azure-icons/databases/10130-icon-service-SQL-Database.png",
+      "storage": "azure-icons/storage/10086-icon-service-Storage-Accounts.png",
+      "keyvault": "azure-icons/security/10245-icon-service-Key-Vaults.png",
+      "service-bus": "azure-icons/integration/10836-icon-service-Azure-Service-Bus.png",
+      "devops": "azure-icons/monitor/00012-icon-service-Application-Insights.png",
+      "aws-cloud": "aws-icons/Architecture-Group-Icons_04302026/AWS-Cloud_32.png",
+      "aws-vpc": "aws-icons/Resource-Icons_04302026/Res_Networking-Content-Delivery/Res_Amazon-VPC_Virtual-private-cloud-VPC_48.png",
+      "aws-ec2": "aws-icons/Architecture-Service-Icons_04302026/Arch_Compute/48/Arch_Amazon-EC2_48.png",
+      "aws-lambda": "aws-icons/Architecture-Service-Icons_04302026/Arch_Compute/48/Arch_AWS-Lambda_48.png",
+      "aws-s3": "aws-icons/Architecture-Service-Icons_04302026/Arch_Storage/48/Arch_Amazon-Simple-Storage-Service_48.png",
+      "aws-rds": "aws-icons/Architecture-Service-Icons_04302026/Arch_Databases/48/Arch_Amazon-RDS_48.png",
+      "aws-dynamodb": "aws-icons/Architecture-Service-Icons_04302026/Arch_Databases/48/Arch_Amazon-DynamoDB_48.png",
+      "aws-bedrock": "aws-icons/Architecture-Service-Icons_04302026/Arch_Artificial-Intelligence/48/Arch_Amazon-Bedrock_48.png",
+      "aws-sagemaker": "aws-icons/Architecture-Service-Icons_04302026/Arch_Analytics/48/Arch_Amazon-SageMaker_48.png",
+      "aws-sqs": "aws-icons/Architecture-Service-Icons_04302026/Arch_Application-Integration/48/Arch_Amazon-Simple-Queue-Service_48.png",
+      "aws-eventbridge": "aws-icons/Architecture-Service-Icons_04302026/Arch_Application-Integration/48/Arch_Amazon-EventBridge_48.png",
+      "aws-cloudfront": "aws-icons/Architecture-Service-Icons_04302026/Arch_Networking-Content-Delivery/48/Arch_Amazon-CloudFront_48.png",
+      "aws-route53": "aws-icons/Architecture-Service-Icons_04302026/Arch_Networking-Content-Delivery/48/Arch_Amazon-Route-53_48.png",
+      "aws-apigw": "aws-icons/Architecture-Service-Icons_04302026/Arch_Networking-Content-Delivery/48/Arch_Amazon-API-Gateway_48.png"
+    },
+    "clusters": ["internet", "region", "env", "subnet", "vnet"],
+    "links": ["vnet-peer", "vnet-dns", "data-transfer"]
+  }
+}

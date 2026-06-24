@@ -1,0 +1,10 @@
+azure-main|templates/main.hbs|pufferfish.config.json
+azure-edge-cases|fixtures/azure-edge-cases.hbs|pufferfish.config.json
+azure-nested-subnets|fixtures/azure-nested-subnets.hbs|pufferfish.config.json
+azure-comprehensive|fixtures/azure-comprehensive.hbs|pufferfish.config.json
+aws-basic|fixtures/aws-basic.hbs|examples/aws.pufferfish.config.json
+aws-nested-subnets|fixtures/aws-nested-subnets.hbs|examples/aws.pufferfish.config.json
+aws-bedrock|fixtures/aws-bedrock.hbs|examples/aws.pufferfish.config.json
+gcp-basic|fixtures/gcp-basic.hbs|examples/gcp.pufferfish.config.json
+mixed-cloud|fixtures/mixed-cloud.hbs|examples/mixed.pufferfish.config.json
+link-matrix|fixtures/link-matrix.hbs|examples/mixed.pufferfish.config.json

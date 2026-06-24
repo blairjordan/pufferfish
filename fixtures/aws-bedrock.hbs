@@ -1,0 +1,60 @@
+{{#diagram title="AWS Bedrock Stack"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{aws-route53 name="route53" label="Route 53"}}
+    {{aws-cloudfront name="cloudfront" label="CloudFront"}}
+
+    {{#region name="region-use1" label="AWS (us-east-1)"}}
+      {{#env env="prod" name="prod"}}
+
+        {{#vnet name="edge-vpc" env="prod"}}
+          {{#subnet name="edge-public" env="prod" label="Public"}}
+            {{aws-elb name="alb" label="ALB"}}
+            {{aws-apigw name="apigw" label="API Gateway"}}
+            {{aws-cognito name="cognito" label="Cognito"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{#vnet name="app-vpc" env="prod"}}
+          {{#subnet name="app-tier" env="prod" label="App"}}
+            {{aws-eks name="eks-cluster" label="EKS"}}
+            {{aws-fargate name="fargate-task" label="Fargate"}}
+            {{aws-lambda name="enrich-lambda" label="Enricher"}}
+            {{aws-step-functions name="orchestrator" label="Orchestrator"}}
+          {{/subnet}}
+
+          {{#subnet name="ai-tier" env="prod" label="AI"}}
+            {{aws-bedrock name="bedrock" label="Bedrock"}}
+            {{aws-sagemaker name="sagemaker" label="SageMaker"}}
+          {{/subnet}}
+
+          {{#subnet name="data-tier" env="prod" label="Data"}}
+            {{aws-aurora name="aurora" label="Aurora"}}
+            {{aws-dynamodb name="ddb" label="DynamoDB"}}
+            {{aws-redshift name="redshift" label="Redshift"}}
+            {{aws-s3 name="raw-bucket" label="S3"}}
+          {{/subnet}}
+
+          {{#subnet name="async" env="prod" label="Async"}}
+            {{aws-eventbridge name="eb" label="EventBridge"}}
+            {{aws-sqs name="sqs-q" label="SQS"}}
+            {{aws-sns name="sns-t" label="SNS"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{vnet-peer from="edge-vpc" to="app-vpc"}}
+        {{data-transfer from="alb" to="eks-cluster"}}
+        {{data-transfer from="apigw" to="enrich-lambda"}}
+        {{data-transfer from="enrich-lambda" to="bedrock"}}
+        {{data-transfer from="orchestrator" to="sagemaker"}}
+        {{data-transfer from="eks-cluster" to="aurora"}}
+        {{data-transfer from="fargate-task" to="ddb"}}
+        {{data-transfer from="orchestrator" to="redshift"}}
+        {{data-transfer from="enrich-lambda" to="raw-bucket"}}
+        {{data-transfer from="eb" to="sqs-q"}}
+        {{data-transfer from="sqs-q" to="enrich-lambda"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}

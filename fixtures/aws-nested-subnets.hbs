@@ -1,0 +1,42 @@
+{{#diagram title="AWS Nested Subnets"}}
+
+  {{#internet name="internet" label="Internet"}}
+    {{aws-cloud name="aws-cloud-root" label="AWS Cloud"}}
+
+    {{#region name="region-use1" label="AWS (us-east-1)"}}
+      {{#env env="dev" name="dev"}}
+        {{#vnet name="platform-vpc" env="dev"}}
+          {{#subnet name="public-subnet-a" env="dev" label="Public A"}}
+            {{aws-ec2 name="alb-a" label="ALB Target A"}}
+            {{aws-lambda name="ingress-lambda" label="Ingress Lambda"}}
+          {{/subnet}}
+
+          {{#subnet name="app-subnet-a" env="dev" label="App A"}}
+            {{aws-ec2 name="app-a1" label="App A1"}}
+            {{aws-ec2 name="app-a2" label="App A2"}}
+          {{/subnet}}
+
+          {{#subnet name="data-subnet-a" env="dev" label="Data A"}}
+            {{aws-rds name="orders-rds" label="Orders RDS"}}
+            {{aws-dynamodb name="sessions-ddb" label="Sessions DDB"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{#vnet name="analytics-vpc" env="dev"}}
+          {{#subnet name="analytics-private" env="dev" label="Analytics"}}
+            {{aws-s3 name="analytics-bucket" label="Analytics Bucket"}}
+            {{aws-lambda name="etl-lambda" label="ETL Lambda"}}
+          {{/subnet}}
+        {{/vnet}}
+
+        {{vnet-peer from="platform-vpc" to="analytics-vpc"}}
+        {{data-transfer from="alb-a" to="app-a1"}}
+        {{data-transfer from="app-a2" to="orders-rds"}}
+        {{data-transfer from="ingress-lambda" to="sessions-ddb"}}
+        {{data-transfer from="etl-lambda" to="analytics-bucket"}}
+        {{data-transfer from="app-a1" to="etl-lambda"}}
+      {{/env}}
+    {{/region}}
+  {{/internet}}
+
+{{/diagram}}
